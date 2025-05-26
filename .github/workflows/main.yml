@@ -1,0 +1,34 @@
+name: Node.js CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      run: echo "No tests yet"
+
+    - name: Build Docker image
+      run: docker build -t ${{ secrets.vilgax77 }}/nodejs-demo-app:latest .
+
+    - name: Log in to DockerHub
+      run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.vilgax77 }} --password-stdin
+
+    - name: Push Docker image to DockerHub
+      run: docker push ${{ secrets.vilgax77 }}/nodejs-demo-app:latest
